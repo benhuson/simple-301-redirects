@@ -1,4 +1,5 @@
 === Simple 301 Redirects ===
+Contributors: scottnelle
 Tags: 301, redirect, url, seo
 Requires at least: 1.5
 Tested up to: 2.8.4
