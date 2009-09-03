@@ -9,7 +9,7 @@ Simple 301 Redirects provides an easy method of redirecting requests to another 
 
 == Description ==
 
-Simple 301 Redirects provides an easy method of redirecting requests to another page on your site or elsewhere on the web. It’s especially handy when you migrate a site to WordPress and can’t preserve your URL structure. By setting up 301 redirects from your old pages to your new pages, any incoming links will be seemlessly passed along, and their pagerank (or what-have-you) will be passed along with them.
+Simple 301 Redirects provides an easy method of redirecting requests to another page on your site or elsewhere on the web. It's especially handy when you migrate a site to WordPress and can't preserve your URL structure. By setting up 301 redirects from your old pages to your new pages, any incoming links will be seemlessly passed along, and their pagerank (or what-have-you) will be passed along with them.
 
 == Installation ==
 
