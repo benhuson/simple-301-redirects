@@ -3,7 +3,7 @@ Contributors: scottnelle
 Tags: 301, redirect, url, seo
 Requires at least: 1.5
 Tested up to: 2.8.4
-Stable tag: 1.0
+Stable tag: 1.01
 
 Simple 301 Redirects provides an easy method of redirecting requests to another page on your site or elsewhere on the web.
 
@@ -22,6 +22,9 @@ Simple 301 Redirects provides an easy method of redirecting requests to another 
 1. The admin interface
 
 == Changelog ==
+
+= 1.01 =
+* Updated redirect method to send headers directly rather than using wp_redirect() because it was sending 302 codes on some servers
 
 = 1.0 =
 * Initial Release
