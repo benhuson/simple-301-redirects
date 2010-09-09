@@ -3,7 +3,7 @@ Contributors: scottnelle
 Tags: 301, redirect, url, seo
 Requires at least: 1.5
 Tested up to: 3.0
-Stable tag: 1.02
+Stable tag: 1.03
 
 Simple 301 Redirects provides an easy method of redirecting requests to another page on your site or elsewhere on the web.
 
@@ -24,6 +24,10 @@ Note: The format for requests is '/about.htm' and the format for redirects is 'h
 1. The admin interface
 
 == Changelog ==
+
+= 1.03 =
+* Sorry for the double update. I forgot to check for PHP4 compatibility. Many people are still using PHP4, apparently, so this update is to fix compatibility with these legacy systems.
+
 
 = 1.02 =
 * Added support for special characters in non-english URLs.

@@ -3,7 +3,7 @@
 Plugin Name: Simple 301 Redirects
 Plugin URI: http://www.scottnelle.com/simple-301-redirects-plugin-for-wordpress/
 Description: Create a list of URLs that you would like to 301 redirect to another page or site
-Version: 1.02
+Version: 1.03
 Author: Scott Nellé
 Author URI: http://www.scottnelle.com/
 */
@@ -165,4 +165,18 @@ if (isset($redirect_plugin)) {
 	}
 }
 
+// this is here for php4 compatibility
+if(!function_exists('str_ireplace')){
+  function str_ireplace($search,$replace,$subject){
+    $token = chr(1);
+    $haystack = strtolower($subject);
+    $needle = strtolower($search);
+    while (($pos=strpos($haystack,$needle))!==FALSE){
+      $subject = substr_replace($subject,$token,$pos,strlen($search));
+      $haystack = substr_replace($haystack,$token,$pos,strlen($search));
+    }
+    $subject = str_replace($token,$replace,$subject);
+    return $subject;
+  }
+}
 ?>
