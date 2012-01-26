@@ -140,7 +140,7 @@ if (!class_exists("Simple301redirects")) {
 		function getAddress()
 		{
 			/*** check for https ***/
-			$protocol = $_SERVER['HTTPS'] == 'on' ? 'https' : 'http';
+			$protocol = isset($_SERVER['HTTPS']) ? 'https' : 'http';
 			/*** return the full address ***/
 			return $protocol.'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
 		}
