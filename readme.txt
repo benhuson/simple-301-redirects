@@ -2,7 +2,7 @@
 Contributors: scottnelle
 Tags: 301, redirect, url, seo
 Requires at least: 1.5
-Tested up to: 3.3.x
+Tested up to: 3.x
 Stable tag: 1.03
 
 Simple 301 Redirects provides an easy method of redirecting requests to another page on your site or elsewhere on the web.
