@@ -1,8 +1,8 @@
 === Simple 301 Redirects ===
 Contributors: scottnelle
 Tags: 301, redirect, url, seo
-Requires at least: 1.5
-Tested up to: 3.x
+Requires at least: 2.0
+Tested up to: 3.5
 Stable tag: 1.03
 
 Simple 301 Redirects provides an easy method of redirecting requests to another page on your site or elsewhere on the web.
@@ -24,6 +24,14 @@ Note: The format for requests is '/about.htm' and the format for redirects is 'h
 1. The admin interface
 
 == Changelog ==
+
+= 1.04 =
+* Moved input to the top of the page and reversed order of redirects to show most recent first
+* Removed deprecated function calls
+* Updated code to better match WordPress coding standards
+* Updated handling of https protocol to prevent errors in certain server configurations
+* Better support for destinations that start with a leading slash instead of the full domain
+
 
 = 1.03 =
 * Sorry for the double update. I forgot to check for PHP4 compatibility. Many people are still using PHP4, apparently, so this update is to fix compatibility with these legacy systems.

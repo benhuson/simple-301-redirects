@@ -3,12 +3,12 @@
 Plugin Name: Simple 301 Redirects
 Plugin URI: http://www.scottnelle.com/simple-301-redirects-plugin-for-wordpress/
 Description: Create a list of URLs that you would like to 301 redirect to another page or site
-Version: 1.03
+Version: 1.04a
 Author: Scott Nellé
 Author URI: http://www.scottnelle.com/
 */
 
-/*  Copyright 2009  Scott Nellé  (email : theguy@scottnelle.com)
+/*  Copyright 2009  Scott Nellé  (email : contact@scottnelle.com)
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -30,16 +30,14 @@ if (!class_exists("Simple301redirects")) {
 		/*
 			generate the link to the options page under settings
 		*/
-		function create_menu()
-		{
-		  add_options_page('301 Redirects', '301 Redirects', 10, '301options', array($this,'options_page'));
+		function create_menu() {
+		  add_options_page('301 Redirects', '301 Redirects', 'manage_options', '301options', array($this,'options_page'));
 		}
 		
 		/*
 			generate the options page in the wordpress admin
 		*/
-		function options_page()
-		{
+		function options_page() {
 		?>
 		<div class="wrap">
 		<h2>Simple 301 Redirects</h2>
@@ -55,11 +53,11 @@ if (!class_exists("Simple301redirects")) {
 				<td><small>example: /about.htm</small></td>
 				<td><small>example: <?php echo get_option('home'); ?>/about/</small></td>
 			</tr>
-			<?php echo $this->expand_redirects(); ?>
 			<tr>
 				<td><input type="text" name="301_redirects[request][]" value="" style="width:15em" />&nbsp;&raquo;&nbsp;</td>
 				<td><input type="text" name="301_redirects[destination][]" value="" style="width:30em;" /></td>
 			</tr>
+			<?php echo $this->expand_redirects(); ?>
 		</table>
 		
 		<p class="submit">
@@ -73,10 +71,11 @@ if (!class_exists("Simple301redirects")) {
 		/*
 			utility function to return the current list of redirects as form fields
 		*/
-		function expand_redirects(){
+		function expand_redirects() {
 			$redirects = get_option('301_redirects');
 			$output = '';
 			if (!empty($redirects)) {
+				$redirects = array_reverse($redirects);
 				foreach ($redirects as $request => $destination) {
 					$output .= '
 					
@@ -94,8 +93,7 @@ if (!class_exists("Simple301redirects")) {
 		/*
 			save the redirects from the options page to the database
 		*/
-		function save_redirects($data)
-		{
+		function save_redirects($data) {
 			$redirects = array();
 			
 			for($i = 0; $i < sizeof($data['request']); ++$i) {
@@ -105,7 +103,8 @@ if (!class_exists("Simple301redirects")) {
 				if ($request == '' && $destination == '') { continue; }
 				else { $redirects[$request] = $destination; }
 			}
-
+			
+			$redirects = array_reverse($redirects);
 			update_option('301_redirects', $redirects);
 		}
 		
@@ -113,10 +112,9 @@ if (!class_exists("Simple301redirects")) {
 			Read the list of redirects and if the current page 
 			is found in the list, send the visitor on her way
 		*/
-		function redirect()
-		{
+		function redirect() {
 			// this is what the user asked for (strip out home portion, case insensitive)
-			$userrequest = str_ireplace(get_option('home'),'',$this->getAddress());
+			$userrequest = str_ireplace(get_option('home'),'',$this->get_address());
 			$userrequest = rtrim($userrequest,'/');
 			
 			$redirects = get_option('301_redirects');
@@ -124,6 +122,10 @@ if (!class_exists("Simple301redirects")) {
 				foreach ($redirects as $storedrequest => $destination) {
 					// compare user request to each 301 stored in the db
 					if(urldecode($userrequest) == rtrim($storedrequest,'/')) {
+						// check if destination needs the domain prepended
+						if (strpos($destination,'/') === 0){
+							$destination = $this->get_protocol().'://'.$_SERVER['HTTP_HOST'].$destination;
+						}
 						header ('HTTP/1.1 301 Moved Permanently');
 						header ('Location: ' . $destination);
 						exit();
@@ -137,13 +139,21 @@ if (!class_exists("Simple301redirects")) {
 			utility function to get the full address of the current request
 			credit: http://www.phpro.org/examples/Get-Full-URL.html
 		*/
-		function getAddress()
-		{
-			/*** check for https ***/
-			$protocol = isset($_SERVER['HTTPS']) ? 'https' : 'http';
-			/*** return the full address ***/
-			return $protocol.'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
-		}
+		function get_address() {
+			// return the full address
+			return $this->get_protocol().'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+		} // end function get_address
+		
+		function get_protocol() {
+			// Set the base protocol to http
+			$protocol = 'http';
+			// check for https
+			if ( isset( $_SERVER["HTTPS"] ) && strtolower( $_SERVER["HTTPS"] ) == "on" ) {
+    			$protocol .= "s";
+			}
+			
+			return $protocol;
+		} // end function get_protocol
 		
 	} // end class Simple301Redirects
 	
