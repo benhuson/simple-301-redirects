@@ -174,7 +174,7 @@ if (!class_exists("Simple301redirects")) {
 						
 						// Make sure it gets all the proper decoding and rtrim action
 						$storedrequest = str_replace('*','(.*)',$storedrequest);
-						$pattern = '/' . str_replace( '/', '\/', rtrim( $storedrequest, '/' ) ) . '/';
+						$pattern = '/^' . str_replace( '/', '\/', $storedrequest ) . '/';
 						$destination = str_replace('*','$1',$destination);
 						$output = preg_replace($pattern, $destination, $userrequest);
 						if ($output !== $userrequest) {
