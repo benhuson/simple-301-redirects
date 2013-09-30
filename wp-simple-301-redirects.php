@@ -3,7 +3,7 @@
 Plugin Name: Simple 301 Redirects
 Plugin URI: http://www.scottnelle.com/simple-301-redirects-plugin-for-wordpress/
 Description: Create a list of URLs that you would like to 301 redirect to another page or site. This version is not for public release.
-Version: 1.04a2
+Version: 1.04a3
 Author: Scott Nellé
 Author URI: http://www.scottnelle.com/
 */
@@ -47,49 +47,96 @@ if (!class_exists("Simple301redirects")) {
 		 */
 		function options_page() {
 		?>
-		<div class="wrap">
-		<script>
-			// Do this the right way before public release!
-			jQuery(document).ready(function(){
-				jQuery('span.wps301-delete').html('Delete').css({'color':'red','cursor':'pointer'}).click(function(){
-					var confirm_delete = confirm('Delete This Redirect?');
-					if (confirm_delete) {
-						jQuery(this).parent().parent().remove();
-					}
+		<div class="wrap simple_301_redirects">
+			<script>
+				//todo: This should be enqued
+				jQuery(document).ready(function(){
+					jQuery('span.wps301-delete').html('Delete').css({'color':'red','cursor':'pointer'}).click(function(){
+						var confirm_delete = confirm('Delete This Redirect?');
+						if (confirm_delete) {
+							
+							// remove element and submit
+							jQuery(this).parent().parent().remove();
+							jQuery('#simple_301_redirects_form').submit();
+							
+						}
+					});
+					
+					jQuery('.simple_301_redirects .documentation').hide().before('<p><a class="reveal-documentation" href="#">Documentation</a></p>')
+					jQuery('.reveal-documentation').click(function(){
+						jQuery(this).parent().siblings('.documentation').slideToggle();
+						return false;
+					});
 				});
-			});
-		</script>
-		<h2>Simple 301 Redirects</h2>
+			</script>
 		
-		<form method="post" action="options-general.php?page=301options">
+		<?php
+			if (isset($_POST['301_redirects'])) {
+				echo '<div id="message" class="updated"><p>Settings saved</p></div>';
+			}
+		?>
 		
-		<table class="widefat">
-			<thead>
-				<tr>
-					<th colspan="2">Request</th>
-					<th colspan="2">Destination</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td colspan="2"><small>example: /about.htm</small></td>
-					<td colspan="2"><small>example: <?php echo get_option('home'); ?>/about/</small></td>
-				</tr>
-				<?php echo $this->expand_redirects(); ?>
-				<tr>
-					<td style="width:35%;"><input type="text" name="301_redirects[request][]" value="" style="width:99%;" /></td>
-					<td style="width:2%;">&raquo;</td>
-					<td style="width:60%;"><input type="text" name="301_redirects[destination][]" value="" style="width:99%;" /></td>
-					<td><span class="wps301-delete">Delete</span></td>
-				</tr>
-			</tbody>
-		</table>
+			<h2>Simple 301 Redirects</h2>
+			
+			<form method="post" id="simple_301_redirects_form" action="options-general.php?page=301options&savedata=true">
+			
+			<table class="widefat">
+				<thead>
+					<tr>
+						<th colspan="2">Request</th>
+						<th colspan="2">Destination</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td colspan="2"><small>example: /about.htm</small></td>
+						<td colspan="2"><small>example: <?php echo get_option('home'); ?>/about/</small></td>
+					</tr>
+					<?php echo $this->expand_redirects(); ?>
+					<tr>
+						<td style="width:35%;"><input type="text" name="301_redirects[request][]" value="" style="width:99%;" /></td>
+						<td style="width:2%;">&raquo;</td>
+						<td style="width:60%;"><input type="text" name="301_redirects[destination][]" value="" style="width:99%;" /></td>
+						<td><span class="wps301-delete">Delete</span></td>
+					</tr>
+				</tbody>
+			</table>
+			
+			<?php $wildcard_checked = (get_option('301_redirects_wildcard') === 'true' ? ' checked="checked"' : ''); ?>
+			<p><input type="checkbox" name="301_redirects[wildcard]" id="wps301-wildcard"<?php echo $wildcard_checked; ?> /><label for="wps301-wildcard"> Use Wildcards?</label></p>
+			
+			<p class="submit"><input type="submit" name="submit_301" class="button-primary" value="<?php _e('Save Changes') ?>" /></p>
+			</form>
+			<div class="documentation">
+				<h2>Documentation</h2>
+				<h3>Simple Redirects</h3>
+				<p>Simple redirects work similar to the format that Apache uses: the request should be relative to your WordPress root. The destination can be either a full URL to any page on the web, or relative to your WordPress root.</p>
+				<h4>Example</h4>
+				<ul>
+					<li><strong>Request:</strong> /old-page/</li>
+					<li><strong>Destinatinon:</strong> /new-page/</li>
+				</ul>
+				
+				<h3>Wildcards</h3>
+				<p>To use wildcards, put an asterisk (*) after the folder name that you want to redirect.</p>
+				<h4>Example</h4>
+				<ul>
+					<li><strong>Request:</strong> /old-folder/*</li>
+					<li><strong>Destinatinon:</strong> /redirect-everything-here/</li>
+				</ul>
 		
-		<?php $wildcard_checked = (get_option('301_redirects_wildcard') === 'true' ? ' checked="checked"' : ''); ?>
-		<p><input type="checkbox" name="301_redirects[wildcard]" id="wps301-wildcard"<?php echo $wildcard_checked; ?> /><label for="wps301-wildcard"> Use Wildcards?</label></p>
-		
-		<p class="submit"><input type="submit" name="submit_301" class="button-primary" value="<?php _e('Save Changes') ?>" /></p>
-		</form>
+				<p>You can also use the asterisk in the destination to replace whatever it matched in the request if you like. Something like this:</p>
+				<h4>Example</h4>
+				<ul>
+					<li><strong>Request:</strong> /old-folder/*</li>
+					<li><strong>Destinatinon:</strong> /some/other/folder/*</li>
+				</ul>
+				<p>Or:</p>
+				<ul>
+					<li><strong>Request:</strong> /old-folder/*/content/</li>
+					<li><strong>Destinatinon:</strong> /some/other/folder/*</li>
+				</ul>
+			</div>
 		</div>
 		<?php
 		} // end of function options_page
@@ -149,6 +196,27 @@ if (!class_exists("Simple301redirects")) {
 		}
 		
 		/**
+		 * delete_redirect function
+		 * save the redirects from the options page to the database
+		 * @access public
+		 * @param int $redirect_position
+		 * @return boolean
+		 */
+		function delete_redirect($redirect_position) {
+			// use nonces and check for permission http://www.garyc40.com/2010/03/5-tips-for-using-ajax-in-wordpress/
+			
+			// handle ajax or regular request
+			
+			// unserialize data
+			
+			// find the redirect in the position that you want to delete and remove it
+			
+			// serialize and save data
+			
+			// if the request came from ajax, return true for the callback
+			// if it was traditional, redirect to the page with deleted=$redirect_position in url for save state
+		}	
+		/**
 		 * redirect function
 		 * Read the list of redirects and if the current page 
 		 * is found in the list, send the visitor on her way
@@ -172,14 +240,17 @@ if (!class_exists("Simple301redirects")) {
 					if ($wildcard === 'true' && strpos($storedrequest,'*') !== false) {
 						// wildcard redirect
 						
-						// Make sure it gets all the proper decoding and rtrim action
-						$storedrequest = str_replace('*','(.*)',$storedrequest);
-						$pattern = '/^' . str_replace( '/', '\/', $storedrequest ) . '/';
-						$destination = str_replace('*','$1',$destination);
-						$output = preg_replace($pattern, $destination, $userrequest);
-						if ($output !== $userrequest) {
-							// pattern matched, perform redirect 
-							$do_redirect = $output;
+						// don't allow people to accidentally lock themselves out of admin
+						if ( strpos($userrequest, '/wp-login') !== 0 && strpos($userrequest, '/wp-admin') !== 0 ) {
+							// Make sure it gets all the proper decoding and rtrim action
+							$storedrequest = str_replace('*','(.*)',$storedrequest);
+							$pattern = '/^' . str_replace( '/', '\/', rtrim( $storedrequest, '/' ) ) . '/';
+							$destination = str_replace('*','$1',$destination);
+							$output = preg_replace($pattern, $destination, $userrequest);
+							if ($output !== $userrequest) {
+								// pattern matched, perform redirect
+								$do_redirect = $output;
+							}
 						}
 					}
 					elseif(urldecode($userrequest) == rtrim($storedrequest,'/')) {
@@ -187,11 +258,11 @@ if (!class_exists("Simple301redirects")) {
 						$do_redirect = $destination;
 					}
 					
-					if ($do_redirect !== '') {
+					// redirect. the second condition here prevents redirect loops as a result of wildcards.
+					if ($do_redirect !== '' && trim($do_redirect,'/') !== trim($userrequest,'/')) {
 						// check if destination needs the domain prepended
 						if (strpos($do_redirect,'/') === 0){
-							// this seems to be broken, at least for wildcard searches. fix!
-							$do_redirect = $this->get_protocol().'://'.$_SERVER['HTTP_HOST'].$do_redirect;
+							$do_redirect = home_url().$do_redirect;
 						}
 						header ('HTTP/1.1 301 Moved Permanently');
 						header ('Location: ' . $do_redirect);
@@ -240,7 +311,7 @@ if (isset($redirect_plugin)) {
 	add_action('admin_menu', array($redirect_plugin,'create_menu'));
 
 	// if submitted, process the data
-	if (isset($_POST['submit_301'])) {
+	if (isset($_POST['301_redirects'])) {
 		$redirect_plugin->save_redirects($_POST['301_redirects']);
 	}
 }
