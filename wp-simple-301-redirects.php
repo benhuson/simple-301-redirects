@@ -114,7 +114,7 @@ if (!class_exists("Simple301redirects")) {
 				<h4>Example</h4>
 				<ul>
 					<li><strong>Request:</strong> /old-page/</li>
-					<li><strong>Destinatinon:</strong> /new-page/</li>
+					<li><strong>Destination:</strong> /new-page/</li>
 				</ul>
 				
 				<h3>Wildcards</h3>
@@ -122,19 +122,19 @@ if (!class_exists("Simple301redirects")) {
 				<h4>Example</h4>
 				<ul>
 					<li><strong>Request:</strong> /old-folder/*</li>
-					<li><strong>Destinatinon:</strong> /redirect-everything-here/</li>
+					<li><strong>Destination:</strong> /redirect-everything-here/</li>
 				</ul>
 		
 				<p>You can also use the asterisk in the destination to replace whatever it matched in the request if you like. Something like this:</p>
 				<h4>Example</h4>
 				<ul>
 					<li><strong>Request:</strong> /old-folder/*</li>
-					<li><strong>Destinatinon:</strong> /some/other/folder/*</li>
+					<li><strong>Destination:</strong> /some/other/folder/*</li>
 				</ul>
 				<p>Or:</p>
 				<ul>
 					<li><strong>Request:</strong> /old-folder/*/content/</li>
-					<li><strong>Destinatinon:</strong> /some/other/folder/*</li>
+					<li><strong>Destination:</strong> /some/other/folder/*</li>
 				</ul>
 			</div>
 		</div>
