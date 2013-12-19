@@ -3,7 +3,7 @@
 Plugin Name: Simple 301 Redirects
 Plugin URI: http://www.scottnelle.com/simple-301-redirects-plugin-for-wordpress/
 Description: Create a list of URLs that you would like to 301 redirect to another page or site. Now with wildcard support.
-Version: 1.05
+Version: 1.06
 Author: Scott Nellé
 Author URI: http://www.scottnelle.com/
 */
@@ -80,6 +80,8 @@ if (!class_exists("Simple301redirects")) {
 			
 			<form method="post" id="simple_301_redirects_form" action="options-general.php?page=301options&savedata=true">
 			
+			<?php wp_nonce_field( 'save_redirects', '_s301r_nonce' ); ?>
+
 			<table class="widefat">
 				<thead>
 					<tr>
@@ -175,6 +177,11 @@ if (!class_exists("Simple301redirects")) {
 		 * @return void
 		 */
 		function save_redirects($data) {
+			if ( !current_user_can('manage_options') )  { wp_die( 'You do not have sufficient permissions to access this page.' ); }
+			check_admin_referer( 'save_redirects', '_s301r_nonce' );
+			
+			$data = $_POST['301_redirects'];
+
 			$redirects = array();
 			
 			for($i = 0; $i < sizeof($data['request']); ++$i) {
@@ -195,27 +202,6 @@ if (!class_exists("Simple301redirects")) {
 			}
 		}
 		
-		/**
-		 * delete_redirect function
-		 * save the redirects from the options page to the database
-		 * @access public
-		 * @param int $redirect_position
-		 * @return boolean
-		 */
-		function delete_redirect($redirect_position) {
-			// use nonces and check for permission http://www.garyc40.com/2010/03/5-tips-for-using-ajax-in-wordpress/
-			
-			// handle ajax or regular request
-			
-			// unserialize data
-			
-			// find the redirect in the position that you want to delete and remove it
-			
-			// serialize and save data
-			
-			// if the request came from ajax, return true for the callback
-			// if it was traditional, redirect to the page with deleted=$redirect_position in url for save state
-		}	
 		/**
 		 * redirect function
 		 * Read the list of redirects and if the current page 
@@ -312,7 +298,7 @@ if (isset($redirect_plugin)) {
 
 	// if submitted, process the data
 	if (isset($_POST['301_redirects'])) {
-		$redirect_plugin->save_redirects($_POST['301_redirects']);
+		add_action('admin_init', array($redirect_plugin,'save_redirects'));
 	}
 }
 

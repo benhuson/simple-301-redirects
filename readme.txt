@@ -2,17 +2,14 @@
 Contributors: scottnelle
 Tags: 301, redirect, url, seo
 Requires at least: 3.0
-Tested up to: 3.6.1
-Stable tag: 1.05
+Tested up to: 3.8
+Stable tag: 1.06
 
 Simple 301 Redirects provides an easy method of redirecting requests to another page on your site or elsewhere on the web.
 
 == Description ==
 
 Simple 301 Redirects provides an easy method of redirecting requests to another page on your site or elsewhere on the web. It's especially handy when you migrate a site to WordPress and can't preserve your URL structure. By setting up 301 redirects from your old pages to your new pages, any incoming links will be seemlessly passed along, and their pagerank (or what-have-you) will be passed along with them.
-
-New for version 1.05: Wildcard redirect support.
-
 
 == Installation ==
 
@@ -22,6 +19,8 @@ New for version 1.05: Wildcard redirect support.
 
 
 == Changelog ==
+= 1.06 =
+* Security Updates - Special thanks to Ryan Hellyer!
 
 = 1.05 =
 * Wildcard support
