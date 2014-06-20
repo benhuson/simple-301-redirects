@@ -36,7 +36,7 @@ if (!class_exists("Simple301redirects")) {
 		 * @return void
 		 */
 		function create_menu() {
-		  add_options_page('301 Redirects', '301 Redirects', 'manage_options', '301options', array($this,'options_page'));
+		  add_management_page('301 Redirects', '301 Redirects', 'manage_options', '301options', array($this,'options_page'));
 		}
 		
 		/**
@@ -78,7 +78,7 @@ if (!class_exists("Simple301redirects")) {
 		
 			<h2>Simple 301 Redirects</h2>
 			
-			<form method="post" id="simple_301_redirects_form" action="options-general.php?page=301options&savedata=true">
+			<form method="post" id="simple_301_redirects_form" action="tools.php?page=301options&savedata=true">
 			
 			<?php wp_nonce_field( 'save_redirects', '_s301r_nonce' ); ?>
 
