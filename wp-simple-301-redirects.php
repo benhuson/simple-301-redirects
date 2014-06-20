@@ -36,9 +36,21 @@ if (!class_exists("Simple301redirects")) {
 		 * @return void
 		 */
 		function create_menu() {
-		  add_management_page('301 Redirects', '301 Redirects', 'manage_options', '301options', array($this,'options_page'));
+		  add_management_page('301 Redirects', '301 Redirects', $this->get_admin_capability(), '301options', array($this,'options_page'));
 		}
-		
+
+		/**
+		 * Get Admin Capability
+		 *
+		 * Returns the capability required to edit 301 redirects in the admin.
+		 * By default only administartors with the 'manage_options' capability are allowed.
+		 *
+		 * @return  string Filter capability.
+		 */
+		function get_admin_capability() {
+			return apply_filters( 'simple301redirects_admin_capability', 'manage_options' );
+		}
+
 		/**
 		 * options_page function
 		 * generate the options page in the wordpress admin
@@ -177,7 +189,7 @@ if (!class_exists("Simple301redirects")) {
 		 * @return void
 		 */
 		function save_redirects($data) {
-			if ( !current_user_can('manage_options') )  { wp_die( 'You do not have sufficient permissions to access this page.' ); }
+			if ( !current_user_can( $this->get_admin_capability() ) )  { wp_die( 'You do not have sufficient permissions to access this page.' ); }
 			check_admin_referer( 'save_redirects', '_s301r_nonce' );
 			
 			$data = $_POST['301_redirects'];
